@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<title>{% block title %}{% endblock %} - MMS birthdays</title>
+</head>
+<body>
+	<div class="container">
+		<div class="row justify-content-md-center">
+			<div class="col-md-12">
+				<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+					<a class="navbar-brand" href="{{ url_for('index') }}">MMS birthdays</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" 
+						data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+					</button>
+				
+					<div class="collapse navbar-collapse" id="navbarNavDropdown">
+						<ul class="navbar-nav mr-auto">
+							{% if g.user %}
+								<li class="nav-item">
+									<a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a>
+								</li>
+							{% else %}
+								<li class="nav-item">
+									<a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+								</li>
+							{% endif %}
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+
+		{% if g.user %}
+			<br>
+			<div class="row justify-content-md-center">
+				<div class="col-md-12">
+					<div class="alert alert-primary" role="alert">
+						Hello, {{ g.user['username'] }}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		{% block header %}{% endblock %}
+		{% block content %}{% endblock %}
+	</div>
+</body>
+</html>

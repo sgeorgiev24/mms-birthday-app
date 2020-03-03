@@ -6,12 +6,12 @@ from flask import (
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from mms-birthday-web.db import get_db
+from .db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-def if_user_exists(id):
+def if_user_exists(username):
     db = get_db()
 
     user_id = db.execute(
@@ -73,17 +73,18 @@ def register():
             error = 'Last name is required.'
         elif not birthday_date:
             error = 'Birthday date is required.'
-        elif if_user_exists:
+        elif if_user_exists(username):
             error = 'User with username {} already exists.'.format(username)
 
         if error is None:
             db.execute(
                 'insert into user (username, password, name, last_name,'
                 'birthday_date, is_admin, is_active) values (?,?,?,?,?,?,?)',
-                (username, password, name, last_name, birthday_date, is_active,
-                    is_active)
+                (username, generate_password_hash(password), name, last_name,
+                    birthday_date, is_active, is_active)
             )
             db.commit()
+
             return redirect(url_for('auth.login'))
 
         flash(error)
@@ -108,6 +109,7 @@ def login():
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
+            print(check_password_hash(user['password'], password))
             error = 'Wrong password.'
 
         if error is None:

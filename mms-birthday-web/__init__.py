@@ -24,8 +24,10 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # register blueprints
-    from . import auth
+    from . import auth, home
     app.register_blueprint(auth.bp)
+    app.register_blueprint(home.bp)
+    app.add_url_rule('/', endpoint='index')
 
     @app.route('/')
     def hello():
