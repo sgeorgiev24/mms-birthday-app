@@ -5,6 +5,7 @@ drop table if exists Payment;
 create table User (
 	id integer primary key autoincrement,
 	username text unique not null,
+	email text unique not null,
 	password text not null,
 	name text not null,
 	last_name text not null,

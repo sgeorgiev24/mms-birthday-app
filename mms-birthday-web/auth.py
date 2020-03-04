@@ -54,6 +54,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        email = request.form['email']
         name = request.form['name']
         last_name = request.form['last_name']
         birthday_date = request.form['birthday_date']
@@ -67,6 +68,8 @@ def register():
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
+        elif not email:
+            error = 'Email is required.'
         elif not name:
             error = 'Name is required.'
         elif not last_name:
@@ -78,10 +81,10 @@ def register():
 
         if error is None:
             db.execute(
-                'insert into user (username, password, name, last_name,'
-                'birthday_date, is_admin, is_active) values (?,?,?,?,?,?,?)',
-                (username, generate_password_hash(password), name, last_name,
-                    birthday_date, is_active, is_active)
+                'insert into user (username, password, email, name, last_name,'
+                'birthday_date, is_admin, is_active) values (?,?,?,?,?,?,?,?)',
+                (username, generate_password_hash(password), email, name,
+                    last_name, birthday_date, is_active, is_active)
             )
             db.commit()
 

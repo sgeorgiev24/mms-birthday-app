@@ -11,6 +11,12 @@
 			<input type="text" name="username" class="form-control" id="username" required>
 		</div>
 		<div class="form-group">
+			<label for="email">Email</label>
+			<input type="text" name="email" class="form-control" id="email"
+				pattern="^[A-Za-z0-9._%+-]+@mm-sol.com$" placeholder="email@mm-sol.com"
+				title="Wrong email format - should end with mm-sol.com" required>
+		</div>
+		<div class="form-group">
 			<label for="password">Password</label>
 			<input type="password" name="password" class="form-control" id="password" required>
 		</div>
