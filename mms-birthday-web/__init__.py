@@ -1,6 +1,8 @@
 import os
+import atexit
 
 from flask import Flask
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 def create_app(test_config=None):
@@ -24,13 +26,16 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # register blueprints
-    from . import auth, home
+    from . import auth, home, birthday
     app.register_blueprint(auth.bp)
     app.register_blueprint(home.bp)
+    app.register_blueprint(birthday.bp)
     app.add_url_rule('/', endpoint='index')
-
-    @app.route('/')
-    def hello():
-        return 'Hello'
+    
+    # with app.app_context():
+        # birthday.check_todays_birthdays()
+        # cron = BackgroundScheduler(daemon=True)
+        # cron.add_job(print("OPA"),'interval',minutes=1)
+        # cron.start()
 
     return app
