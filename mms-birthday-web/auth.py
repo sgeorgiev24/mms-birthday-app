@@ -84,7 +84,7 @@ def register():
                 'insert into user (username, password, email, name, last_name,'
                 'birthday_date, is_admin, is_active) values (?,?,?,?,?,?,?,?)',
                 (username, generate_password_hash(password), email, name,
-                    last_name, birthday_date, is_active, is_active)
+                    last_name, birthday_date, is_admin, is_active)
             )
             db.commit()
 
