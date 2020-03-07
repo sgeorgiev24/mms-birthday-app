@@ -52,7 +52,7 @@ def create_birthday():
     if user_id is not None:
         # Create birthday
         db = get_db()
-        
+
         if not if_birthday_exists(today, user_id):
             db.execute(
                 'insert into Birthday (user_id, current_birthday_date) '
@@ -60,5 +60,3 @@ def create_birthday():
                 (user_id, today)
             )
             db.commit()
-
-    return render_template('home/index.html')

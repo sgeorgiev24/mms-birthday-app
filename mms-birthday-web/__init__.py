@@ -31,11 +31,10 @@ def create_app(test_config=None):
     app.register_blueprint(home.bp)
     app.register_blueprint(birthday.bp)
     app.add_url_rule('/', endpoint='index')
-    
-    # with app.app_context():
-        # birthday.check_todays_birthdays()
-        # cron = BackgroundScheduler(daemon=True)
-        # cron.add_job(print("OPA"),'interval',minutes=1)
-        # cron.start()
+
+    with app.app_context():
+        cron = BackgroundScheduler(daemon=True)
+        cron.add_job(birthday.create_birthday, 'interval', minutes=720)
+        cron.start()
 
     return app
