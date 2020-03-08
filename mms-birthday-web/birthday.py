@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request
 from datetime import date
 
 from .db import get_db
+from .auth import admin_required
 
 bp = Blueprint('birthday', __name__, url_prefix='/birthday')
 
@@ -73,10 +74,17 @@ def create_birthday():
                 ).fetchone()
 
                 active_users = db.execute(
-                    'select id from user where is_active = 1'
+                    'select id '
+                    'from user '
+                    'where is_active = 1 and id != ?',
+                    (user_id,)
                 ).fetchall()
 
                 for user in active_users:
+                    # this will skip the man who has birthday
+                    if user['id'] == user_id:
+                        continue
+
                     db.execute(
                         'insert into Payment (birthday_id, user_id, is_paid) '
                         'values (?,?,?)',
@@ -85,3 +93,48 @@ def create_birthday():
                     db.commit()
 
     return redirect(url_for('home.index'))
+
+
+@bp.route('/edit/<int:id>', methods=('GET', 'POST'))
+@admin_required
+def edit(id):
+    db = get_db()
+
+    birthday = db.execute(
+        'select birthday.id, birthday.current_birthday_date, '
+        'user.name, user.last_name '
+        'from birthday '
+        'join user on birthday.user_id=user.id '
+        'where birthday.id = ?',
+        (id,)
+    ).fetchone()
+
+    if birthday is None:
+        abort(404, "This birthday doesn't exist.")
+
+    payments = db.execute(
+        'select Payment.user_id, Payment.is_paid, user.name, user.last_name '
+        'from Payment '
+        'join user on Payment.user_id=user.id '
+        'where birthday_id = ? '
+        'order by user.name desc, user.last_name desc',
+        (birthday['id'],)
+    ).fetchall()
+
+    if request.method == 'POST':
+        checkboxes = request.form.getlist('payment')
+
+        if len(checkboxes) != 0:
+            for user_id in checkboxes:
+                db.execute(
+                    'update Payment set is_paid = 1 '
+                    'where user_id = ? and birthday_id = ?',
+                    (user_id, birthday['id'])
+                )
+                db.commit()
+
+        return redirect(url_for('birthday.edit', id=id))
+
+    return render_template('birthday/edit.html',
+                            birthday=birthday,
+                            payments=payments)

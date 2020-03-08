@@ -36,7 +36,9 @@
 							<h5 class="card-title">
 								{{ birthday.name }} {{ birthday.last_name }}'s birthday
 							</h5>
-							<a href="#" class="btn btn-primary">Edit</a>
+							{% if g.user['is_admin'] == 1 %}
+								<a href="{{ url_for('birthday.edit', id=birthday.id) }}" class="btn btn-primary">Edit</a>
+							{% endif %}
 						</div>
 					</div>
 				</div>

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="row">
+	<div class="col-md-12">
+			<h1 style="text-align: center;">
+				{% block title %}
+					Edit {{ birthday.name }} {{ birthday.last_name }}'s birthday
+				{% endblock %}
+			</h1>
+	</div>
+</div>
+<hr>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-6" style="text-align: right;">
+			<h4>The participant</h4>
+		</div>
+		<div class="col-md-6" style="text-align: left;">
+			<h4>Is paid</h4>
+		</div>
+		<hr width="50%">
+	</div>
+	<form method="post">
+		{% for payment in payments %}
+			<div class="row edit-birthday">
+					<div class="col-sm-6" style="text-align: right;">
+						<label for="{{ payment.user_id }}">
+							{{ payment.name }} {{ payment.last_name }}
+						</label>
+					</div>
+					<div class="col-sm-6" style="text-align: left;">
+						{% if payment.is_paid %}
+							<input type="checkbox" name="payment" value="{{ payment.user_id }}" disabled checked>
+						{% else %}
+							<input type="checkbox" name="payment" value="{{ payment.user_id }}">
+						{% endif %}
+					</div>
+			</div>
+			<hr width="50%">
+		{% endfor %}
+		<div class="row">
+			<div class="col-sm-12">
+				<button type="submit" class="btn btn-primary" style="display: block; margin: auto;">
+					Save changes
+				</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}
