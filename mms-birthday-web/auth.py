@@ -1,4 +1,5 @@
 import functools
+import click
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -6,9 +7,43 @@ from flask import (
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from flask.cli import with_appcontext
+
 from .db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+
+def make_admin(username):
+    db = get_db()
+
+    user = db.execute(
+        'select id from user '
+        'where username = ?',
+        (username,)
+    ).fetchone()
+
+    if user is None:
+        return None
+
+    db.execute(
+        'update user set is_admin = 1 '
+        'where username = ?',
+        (username,)
+    )
+    db.commit()
+
+
+@click.command('make-admin')
+@click.argument('username')
+@with_appcontext
+def make_admin_command(username):
+    make_admin(username)
+    click.echo('{} is now admin.'.format(username))
+
+
+def init_app(app):
+    app.cli.add_command(make_admin_command)
 
 
 def if_user_exists(username):
@@ -25,11 +60,11 @@ def if_user_exists(username):
         return True
 
 
-def login_required(view):
+def admin_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
+        if g.user['is_admin'] != 1:
+            return redirect(url_for('home.index'))
 
         return view(**kwargs)
 

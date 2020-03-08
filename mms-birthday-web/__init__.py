@@ -20,14 +20,15 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from . import db
-    db.init_app(app)
-
     # register blueprints
     from . import auth, home, birthday
     app.register_blueprint(auth.bp)
     app.register_blueprint(home.bp)
     app.register_blueprint(birthday.bp)
     app.add_url_rule('/', endpoint='index')
+
+    from . import db
+    db.init_app(app)
+    auth.init_app(app)
 
     return app
