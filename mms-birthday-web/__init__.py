@@ -1,8 +1,6 @@
 import os
-import atexit
 
 from flask import Flask
-from apscheduler.schedulers.background import BackgroundScheduler
 
 
 def create_app(test_config=None):
@@ -31,10 +29,5 @@ def create_app(test_config=None):
     app.register_blueprint(home.bp)
     app.register_blueprint(birthday.bp)
     app.add_url_rule('/', endpoint='index')
-
-    with app.app_context():
-        cron = BackgroundScheduler(daemon=True)
-        cron.add_job(birthday.create_birthday, 'interval', minutes=720)
-        cron.start()
 
     return app

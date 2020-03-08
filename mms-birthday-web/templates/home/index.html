@@ -1,1 +1,46 @@
 {% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+
+{% block header %}
+	{% if g.user %}
+	<div class="row">
+		<div class="col-md-12">
+				<h1 style="text-align: center;">
+					Recent birthdays
+				</h1>
+		</div>
+	</div>
+	{% else %}
+		<div class="row">
+			<div class="col-md-12">
+					<h1 style="text-align: center;">
+						Please log in.
+					</h1>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+
+{% block content %}
+	{% if g.user %}
+		{% for birthday in birthdays %}
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header">
+							{{ birthday.current_birthday_date }}
+						</div>
+						<div class="card-body">
+							<h5 class="card-title">
+								{{ birthday.name }} {{ birthday.last_name }}'s birthday
+							</h5>
+							<a href="#" class="btn btn-primary">Edit</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endblock %}
