@@ -81,8 +81,9 @@ def register():
 
         if error is None:
             db.execute(
-                'insert into user (username, password, email, name, last_name,'
-                'birthday_date, is_admin, is_active) values (?,?,?,?,?,?,?,?)',
+                'insert or ignore into user (username, password, email, name, '
+                'last_name, birthday_date, is_admin, is_active) values '
+                '(?,?,?,?,?,?,?,?)',
                 (username, generate_password_hash(password), email, name,
                     last_name, birthday_date, is_admin, is_active)
             )
