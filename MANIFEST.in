@@ -1,0 +1,4 @@
+include mms-birthday-web/schema.sql
+graft mms-birthday-web/static
+graft mms-birthday-web/templates
+global-exclude *.pyc
