@@ -119,7 +119,7 @@ def if_user_exists(username):
 def admin_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if g.user['is_admin'] != 1:
+        if not g.user or g.user['is_admin'] != 1:
             return redirect(url_for('home.index'))
 
         return view(**kwargs)
