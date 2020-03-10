@@ -85,6 +85,7 @@ def load_user():
 
 
 @bp.route('/register', methods=('GET', 'POST'))
+@admin_required
 def register():
     if request.method == 'POST':
         username = request.form['username']
@@ -124,7 +125,7 @@ def register():
             )
             db.commit()
 
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('home.index'))
 
         flash(error)
 
