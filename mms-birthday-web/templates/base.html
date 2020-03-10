@@ -38,21 +38,13 @@
 								</li>
 							{% endif %}
 						</ul>
+						{% if g.user %}
+							<div style="color: #fff;font-size: 18px">Hello, {{ g.user['username'] }}</div>
+						{% endif %}
 					</div>
 				</nav>
 			</div>
 		</div>
-
-		{% if g.user %}
-			<br>
-			<div class="row justify-content-md-center">
-				<div class="col-md-12">
-					<div class="alert alert-primary" role="alert">
-						Hello, {{ g.user['username'] }}
-					</div>
-				</div>
-			</div>
-		{% endif %}
 		{% block header %}{% endblock %}
 		{% block content %}{% endblock %}
 	</div>
