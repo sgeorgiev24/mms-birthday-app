@@ -1,31 +1,38 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<div class="row">
-	<div class="col-md-12">
-		<h1 style="text-align: center; padding-top: 10px;">{% block title %}Login{% endblock %}</h1>
+	<div class="row">
+		<div class="col-md-12">
+			<h1 style="text-align: center; padding-top: 10px;">
+				{% if g.user %}
+					You're already logged in
+				{% else %}
+					{% block title %}Login{% endblock %}
+				{% endif %}
+			</h1>
+		</div>
 	</div>
-</div>
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-md-center">
-	<div class="col-md-12">
-		<form method="post">
-			<div class="form-group">
-				<label for="username">Username</label>
-				<input type="text" name="username" class="form-control" id="username" required>
-			</div>
-			<div class="form-group">
-				<label for="password">Password</label>
-				<input type="password" name="password" class="form-control" id="password" required>
-			</div>
-			{% for message in get_flashed_messages() %}
-				<div class="alert alert-danger" role="alert">{{ message }}</div>
-			{% endfor %}
-			<button type="submit" class="btn btn-primary">Login</button>
-		</form>
+{% if not g.user %}
+	<div class="row justify-content-md-center">
+		<div class="col-md-12">
+			<form method="post">
+				<div class="form-group">
+					<label for="username">Username</label>
+					<input type="text" name="username" class="form-control" id="username" required>
+				</div>
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input type="password" name="password" class="form-control" id="password" required>
+				</div>
+				{% for message in get_flashed_messages() %}
+					<div class="alert alert-danger" role="alert">{{ message }}</div>
+				{% endfor %}
+				<button type="submit" class="btn btn-primary">Login</button>
+			</form>
+		</div>
 	</div>
-</div>
-	
+{% endif %}
 {% endblock %}
