@@ -14,7 +14,7 @@ from .db import get_db
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-def make_admin(username):
+def get_user_by_username(username):
     db = get_db()
 
     user = db.execute(
@@ -22,6 +22,62 @@ def make_admin(username):
         'where username = ?',
         (username,)
     ).fetchone()
+
+    return user
+
+
+def make_inactive(username):
+    db = get_db()
+
+    user = get_user_by_username(username)
+
+    if user is None:
+        return None
+
+    db.execute(
+        'update user set is_active = 0 '
+        'where username = ?',
+        (username,)
+    )
+    db.commit()
+
+
+@click.command('make-inactive')
+@click.argument('username')
+@with_appcontext
+def make_inactive_command(username):
+    make_inactive(username)
+    click.echo('{} is now inactive.'.format(username))
+
+
+def make_active(username):
+    db = get_db()
+
+    user = get_user_by_username(username)
+
+    if user is None:
+        return None
+
+    db.execute(
+        'update user set is_active = 1 '
+        'where username = ?',
+        (username,)
+    )
+    db.commit()
+
+
+@click.command('make-active')
+@click.argument('username')
+@with_appcontext
+def make_active_command(username):
+    make_active(username)
+    click.echo('{} is now active.'.format(username))
+
+
+def make_admin(username):
+    db = get_db()
+
+    user = get_user_by_username(username)
 
     if user is None:
         return None
