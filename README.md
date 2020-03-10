@@ -9,7 +9,7 @@
 6. $ flask init-db
 7. $ flask run
 
-### Available
+### Available commands:
 * $ flask init-db
 * $ flask make-admin <username>
 * $ flask make-active <username>
