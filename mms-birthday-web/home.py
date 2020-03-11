@@ -25,4 +25,13 @@ def index():
         (user_id,)
     ).fetchall()
 
-    return render_template('home/index.html', birthdays=birthdays)
+    payments = db.execute(
+        'select birthday_id, user_id, is_paid '
+        'from Payment '
+        'where user_id = ?',
+        (user_id,)
+    ).fetchall()
+
+    return render_template('home/index.html',
+                            birthdays=birthdays,
+                            payments=payments)

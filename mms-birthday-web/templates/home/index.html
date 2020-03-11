@@ -28,19 +28,39 @@
 		{% for birthday in birthdays %}
 			<div class="row">
 				<div class="col-md-12">
-					<div class="card">
-						<div class="card-header">
-							{{ birthday.current_birthday_date }}
-						</div>
-						<div class="card-body">
-							<h5 class="card-title">
-								{{ birthday.name }} {{ birthday.last_name }}'s birthday
-							</h5>
-							{% if g.user['is_admin'] == 1 %}
-								<a href="{{ url_for('birthday.edit', id=birthday.id) }}" class="btn btn-primary">Edit</a>
+					{% for payment in payments %}
+						{% if payment.birthday_id == birthday.id %}
+							{% if payment.user_id == g.user['id'] and payment.is_paid == 1 %}
+								<div class="card card_paid">
+									<div class="card-header">
+										{{ birthday.current_birthday_date }}
+									</div>
+									<div class="card-body">
+										<h5 class="card-title">
+											{{ birthday.name }} {{ birthday.last_name }}'s birthday
+										</h5>
+										{% if g.user['is_admin'] == 1 %}
+											<a href="{{ url_for('birthday.edit', id=birthday.id) }}" class="btn btn-primary">Edit</a>
+										{% endif %}
+									</div>
+								</div>
+							{% else %}
+								<div class="card card_unpaid">
+									<div class="card-header">
+										{{ birthday.current_birthday_date }}
+									</div>
+									<div class="card-body">
+										<h5 class="card-title">
+											{{ birthday.name }} {{ birthday.last_name }}'s birthday
+										</h5>
+										{% if g.user['is_admin'] == 1 %}
+											<a href="{{ url_for('birthday.edit', id=birthday.id) }}" class="btn btn-primary">Edit</a>
+										{% endif %}
+									</div>
+								</div>
 							{% endif %}
-						</div>
-					</div>
+						{% endif %}
+					{% endfor %}
 				</div>
 			</div>
 		{% endfor %}

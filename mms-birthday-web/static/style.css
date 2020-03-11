@@ -3,7 +3,16 @@
 }
 
 .card {
-	margin-top: 20px;;
+	margin-top: 20px;
+	border-width: 2px;
+}
+
+.card_paid {
+	border-color: #2ecc71;
+}
+
+.card_unpaid {
+	border-color: #ff0000;
 }
 
 .edit-birthday {
